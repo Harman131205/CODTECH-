@@ -1,0 +1,57 @@
+import java.io.*;
+import java.nio.file.*;
+
+public class FileHandlingUtilitytas {
+
+    // Method to write to a file
+    public static void writeToFile(String filePath, String content) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath))) {
+            writer.write(content);
+            System.out.println("File written successfully.");
+        } catch (IOException e) {
+            System.out.println("Error writing to file: " + e.getMessage());
+        }
+    }
+
+    // Method to read from a file
+    public static void readFromFile(String filePath) {
+        try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
+            String line;
+            System.out.println("Reading file content:");
+            while ((line = reader.readLine()) != null) {
+                System.out.println(line);
+            }
+        } catch (IOException e) {
+            System.out.println("Error reading file: " + e.getMessage());
+        }
+    }
+
+    // Method to modify the file (append content)
+    public static void modifyFile(String filePath, String additionalContent) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath, true))) {
+            writer.newLine();
+            writer.write(additionalContent);
+            System.out.println("File modified successfully.");
+        } catch (IOException e) {
+            System.out.println("Error modifying file: " + e.getMessage());
+        }
+    }
+
+    public static void main(String[] args) {
+        String filePath = "example.txt";
+        String initialContent = "Hello, this is the original content.";
+        String additionalContent = "This line is added to modify the file.";
+
+        // Write to file
+        writeToFile(filePath, initialContent);
+
+        // Read from file
+        readFromFile(filePath);
+
+        // Modify (append) file
+        modifyFile(filePath, additionalContent);
+
+        // Read again to show updated content
+        readFromFile(filePath);
+    }
+}
