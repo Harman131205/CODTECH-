@@ -1,0 +1,48 @@
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import org.json.JSONObject;
+
+public class WeatherClient {
+
+    // Replace with your actual API key
+    static final String API_KEY = "YOUR_API_KEY";
+    static final String CITY = "London";
+    static final String API_URL = "https://api.openweathermap.org/data/2.5/weather?q=" + CITY + "&appid=" + API_KEY + "&units=metric";
+
+    public static void main(String[] args) {
+        try {
+            // Send HTTP GET request
+            URL url = new URL(API_URL);
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setRequestMethod("GET");
+
+            // Read response
+            BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+            StringBuilder responseBuffer = new StringBuilder();
+            String line;
+
+            while ((line = reader.readLine()) != null) {
+                responseBuffer.append(line);
+            }
+            reader.close();
+
+            // Parse JSON response
+            JSONObject json = new JSONObject(responseBuffer.toString());
+            JSONObject main = json.getJSONObject("main");
+            double temperature = main.getDouble("temp");
+            int humidity = main.getInt("humidity");
+            String weatherDescription = json.getJSONArray("weather").getJSONObject(0).getString("description");
+
+            // Display output
+            System.out.println("Weather Info for " + CITY + ":");
+            System.out.println("Temperature: " + temperature + "°C");
+            System.out.println("Humidity: " + humidity + "%");
+            System.out.println("Condition: " + weatherDescription);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+}
